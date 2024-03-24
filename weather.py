@@ -30,7 +30,7 @@ def get_location(city):
         lon = data['results'][0]['geometry']['location']['lng']
     return lat, lon
 
-
+# Determine whether the weather is available in the weather dataset
 def is_valid_weather(city):
     lat, lon = get_location(city)
     if lat == 0 and lon == 0:
@@ -197,35 +197,35 @@ def save_csv_weather(city,df, types):
 
 # Function to get weather data
 def get_weather_data(city, save, type):
-    # Determine whether ticker symbol is available in dataset:
-    determine = is_valid_weather(city)
-    if determine is True:
-        df = []
-        # Get 10 years data
-        if type == 'daily':
-            end_date = find_latest_weather_daily(city)
-            start_date = (datetime.strptime(end_date, '%Y-%m-%d') - timedelta(days=3650)).strftime('%Y-%m-%d')
-            df = weather_daily(city, start_date, end_date)
-            # Ensure column names match
-            df = data_preprocessing(df, ["TEMPERATURE_max", "TEMPERATURE_min", "WIND_SPEED_max",
-                                         "WIND_DIRECTION", "PRECIPITATION","et0_fao_evapotranspiration"])
+    # Determine whether weather data is available for the city
+    is_available = is_valid_weather(city)
 
-        # Get 4 years data
+    if is_available:
+        # Get weather data based on the specified type
+        if type == 'daily':
+            # Get 10 years of daily data
+            end_date = find_latest_weather_daily(city)
+            start_date = (pd.to_datetime(end_date) - pd.DateOffset(years=10)).strftime('%Y-%m-%d')
+            df = weather_daily(city, start_date, end_date)
+            # Ensure column names match for preprocessing
+            df = data_preprocessing(df, ["TEMPERATURE_max", "TEMPERATURE_min", "WIND_SPEED_max",
+                                         "WIND_DIRECTION", "PRECIPITATION", "et0_fao_evapotranspiration"])
         elif type == 'hourly':
+            # Get 5 years of hourly data
             end_date = find_latest_weather_hourly(city)
-            start_date = (end_date - timedelta(days=365 * 4)).strftime('%Y-%m-%d')
-            end_date = end_date.strftime('%Y-%m-%d')
+            start_date = (pd.to_datetime(end_date) - pd.DateOffset(years=5)).strftime('%Y-%m-%d')
+            end_date = pd.to_datetime(end_date).strftime('%Y-%m-%d')
             df = weather_hourly(city, start_date, end_date)
-            # Ensure column names match
-            df = data_preprocessing(df, ["temperature", "relative_humidity_2m",
-                                         "rain", "snowfall", "pressure", "surface_pressure",
-                                         "wind_speed", "precipitation","wind_direction"])
+            # Ensure column names match for preprocessing
+            df = data_preprocessing(df, ["temperature", "relative_humidity_2m", "rain", "snowfall",
+                                         "pressure", "surface_pressure", "wind_speed", "precipitation",
+                                         "wind_direction"])
 
         if save == 'yes':
+            # Save the data to a CSV file
             save_csv_weather(city, df, type)
     else:
-        print("Please retry")
-
+        print("Weather data is not available for", city)
 
 
 # Example usage
