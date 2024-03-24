@@ -5,7 +5,7 @@ import pytz as dt
 from datetime import datetime
 from datetime import datetime, timedelta
 import pytz
-
+from preprocessing_data import data_preprocessing
 
 # Find the latest date in the database (real-time) - Daily
 def find_latest_data_daily(ticker_symbol):
@@ -109,6 +109,8 @@ def get_stock_data(ticker_symbol, save, type):
         elif type == 'hourly':
             df = stock_hourly_data(ticker_symbol)
         # whether save as csv file
+        # Deal with missing data and outlier by using linear regression
+        df = data_preprocessing(df,['Open','High','Low','Close','Volume'])
         if save == 'yes':
             save_csv(ticker_symbol, df, type)
     else:
