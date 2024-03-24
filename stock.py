@@ -115,6 +115,7 @@ def get_stock_data(ticker_symbol, save, type):
             save_csv(ticker_symbol, df, type)
     else:
         print("Please retry")
+    return df
 
 
 # EXAMPLE
