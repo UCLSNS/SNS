@@ -30,11 +30,10 @@ def handle_outliers_with_regression(df, column):
         # Predict outlier values using linear regression
         X_outliers = outliers_df.index.values.astype(np.int64).reshape(-1, 1)  # Convert datetime to numerical values
         y_predicted = model.predict(X_outliers)
-        # Update outliers in the dataframe
-        df.loc[outliers_df.index, column] = y_predicted.astype(np.float64)  # Explicitly cast to float64
+        # Ensure compatibility by explicitly casting to the dtype of the column
+        df.loc[outliers_df.index, column] = y_predicted.astype(df[column].dtype)
+
         return df
-
-
 
 
 # Function to handle missing values using linear regression for a specified column
@@ -53,7 +52,8 @@ def handle_missing_with_regression(df, column):
         X_missing = df[df[column].isna()].index.values.reshape(-1, 1)
         y_predicted = model.predict(X_missing)
         # Update missing values in the dataframe
-        df.loc[df[column].isna(), column] = y_predicted
+        # Ensure the predicted values have the same data type as the column
+        df.loc[df[column].isna(), column] = y_predicted.astype(df[column].dtype)
     return df
 
 
@@ -62,7 +62,7 @@ def data_preprocessing(df, columns):
     for column in columns:
         # Handle missing values using linear regression
         df = handle_missing_with_regression(df, column)
-        # Handle outlier values using linear regression
+        # Handle outlier values using missing data
         df = handle_outliers_with_regression(df, column)
 
     return df
