@@ -226,6 +226,7 @@ def get_weather_data(city, save, type):
             save_csv_weather(city, df, type)
     else:
         print("Weather data is not available for", city)
+    return df
 
 
 # Example usage
