@@ -30,6 +30,7 @@ def get_location(city):
         lon = data['results'][0]['geometry']['location']['lng']
     return lat, lon
 
+
 # Determine whether the weather is available in the weather dataset
 def is_valid_weather(city):
     lat, lon = get_location(city)
@@ -126,6 +127,7 @@ def weather_daily(city, start_date, end_date):
     return daily_dataframe
 
 
+# Function to fetch hourly weather data
 def weather_hourly(city, start_date, end_date):
     # Set up the Open-Meteo API client with cache and retry on error
     cache_session = requests_cache.CachedSession('.cache', expire_after=-1)
@@ -184,7 +186,7 @@ def weather_hourly(city, start_date, end_date):
 
 
 # Function to save data to CSV
-def save_csv_weather(city,df, types):
+def save_csv_weather(city, df, types):
     if types == 'daily':
         csv_file = f"{city}_daily.csv"
         df.to_csv(csv_file, index=False)
@@ -199,7 +201,8 @@ def save_csv_weather(city,df, types):
 def get_weather_data(city, save, type):
     # Determine whether weather data is available for the city
     is_available = is_valid_weather(city)
-
+    df= None
+    end_date=None
     if is_available:
         # Get weather data based on the specified type
         if type == 'daily':
@@ -213,24 +216,25 @@ def get_weather_data(city, save, type):
         elif type == 'hourly':
             # Get 5 years of hourly data
             end_date = find_latest_weather_hourly(city)
-            start_date = (pd.to_datetime(end_date) - pd.DateOffset(years=5)).strftime('%Y-%m-%d')
+            start_date = (pd.to_datetime(end_date) - pd.DateOffset(years=1)).strftime('%Y-%m-%d')
+            end = end_date
             end_date = pd.to_datetime(end_date).strftime('%Y-%m-%d')
             df = weather_hourly(city, start_date, end_date)
             # Ensure column names match for preprocessing
             df = data_preprocessing(df, ["temperature", "relative_humidity_2m", "rain", "snowfall",
                                          "pressure", "surface_pressure", "wind_speed", "precipitation",
                                          "wind_direction"])
+            end_date = end
 
         if save == 'yes':
             # Save the data to a CSV file
             save_csv_weather(city, df, type)
     else:
         print("Weather data is not available for", city)
-    return df
+    return df,end_date
 
 
 # Example usage
 if __name__ == "__main__":
-    get_weather_data('beijing','yes','hourly')
-    get_weather_data('london','yes','daily')
-
+    get_weather_data('beijing', 'yes', 'hourly')
+    get_weather_data('london', 'yes', 'daily')
