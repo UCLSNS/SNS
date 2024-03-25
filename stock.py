@@ -15,7 +15,7 @@ def find_latest_data_daily(ticker_symbol):
         # Create a yfinance Ticker object
         ticker = yf.Ticker(ticker_symbol)
         # Get historical data for the specific date
-        data = ticker.history(start=end_date, end=end_date)
+        data = ticker.history(start= (datetime.strptime(end_date, '%Y-%m-%d') - timedelta(days=1)).strftime('%Y-%m-%d'), end=end_date)
         if not data.empty:
             break
         end_date = (datetime.strptime(end_date, '%Y-%m-%d') - timedelta(days=1)).strftime('%Y-%m-%d')
@@ -38,7 +38,7 @@ def find_latest_data_hourly(ticker_symbol):
         ticker = yf.Ticker(ticker_symbol)
 
         # Get historical data for the specific date
-        hourly_data = ticker.history(start=end_date, end=end_date)
+        hourly_data = ticker.history(start=end_date-timedelta(hours=1), end=end_date)
 
         # Check if data is not empty
         if not hourly_data.empty:
