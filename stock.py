@@ -1,127 +1,87 @@
-import yfinance as yf
-from datetime import datetime, timedelta
+import numpy as np
 import pandas as pd
-import pytz as dt
-from datetime import datetime
-from datetime import datetime, timedelta
-import pytz
-from preprocessing_data import data_preprocessing
+from sklearn.preprocessing import MinMaxScaler
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense, Dropout
+from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.regularizers import l2
+
+# 加载数据
+df = pd.read_csv('AAPL_data.csv')
+
+df['Date'] = pd.to_datetime(df['Date'], format='%Y-%m-%d')
+df = df.set_index('Date')
+
+data = pd.DataFrame({'PRICE_MAX': df['High'], 'PRICE_MIN': df['Low']},
+                    index = df.index, 
+                    columns = ['PRICE_MAX', 'PRICE_MIN'])
+
+# 数据预处理
+scaler = MinMaxScaler(feature_range=(0, 1))
+data_scaled = scaler.fit_transform(data)
+
+# 构造数据集
+X = []
+Y_price_max = []
+Y_price_min = []
+
+look_back = 5
+
+for i in range(len(data_scaled) - look_back - 1):
+    X.append(data_scaled[i:(i + look_back), :])
+    Y_price_max.append(data_scaled[i + look_back, 0])
+    Y_price_min.append(data_scaled[i + look_back, 1])
+
+X = np.array(X)
+Y_price_max = np.array(Y_price_max)
+Y_price_min = np.array(Y_price_min)
+
+# 划分训练集和测试集
+train_size = int(len(X) * 0.8)
+trainX, testX = X[:train_size], X[train_size:]
+trainY_price_max, testY_price_max = Y_price_max[:train_size], Y_price_max[train_size:]
+trainY_price_min, testY_price_min = Y_price_min[:train_size], Y_price_min[train_size:]
+
+# 构建和训练LSTM模型
+model = Sequential()
+model.add(LSTM(30, input_shape = (trainX.shape[1], trainX.shape[2])))
+model.add(Dropout(0.5))
+model.add(Dense(2))
+model.compile(optimizer = 'adam', loss = 'mean_squared_error')
+
+# 早停机制
+early_stopping = EarlyStopping(monitor='val_loss', patience=5)
+
+model.fit(trainX, [trainY_price_max, trainY_price_min], 
+          epochs = 30,
+          batch_size = 32,  # 减小批次大小
+          validation_data = (testX, [testY_price_max, testY_price_min]),
+          verbose = 2,
+          callbacks = [early_stopping])  # 使用早停机制
+
+# 预测未来三天的最高价格和最低价格
+future_price_max = []
+future_price_min = []
+last_batch = data_scaled[-look_back:]
+last_batch = last_batch.reshape((1, look_back, 2))
+
+# 循环三次来预测接下来的三天
+for i in range(3):  # 预测未来三天
+    next_price_max = model.predict(last_batch)[0][0]
+    next_price_min = model.predict(last_batch)[0][1]
+
+    # 反归一化
+    price_max = scaler.inverse_transform([[next_price_max, 0]])[0][0]
+    future_price_max.append(price_max)
+    price_min = scaler.inverse_transform([[0, next_price_min]])[0][1]
+    future_price_min.append(price_min) 
+    new_batch = np.append(last_batch[:, 1:, :], [[[next_price_max, next_price_min]]], axis=1)
+    last_batch = new_batch.reshape((1, look_back, 2))
+
+# 打印预测的价格
+for i in range(len(future_price_max)):  
+    price_Max = future_price_max[i]
+    price_Min = future_price_min[i]
+    print('Day {}: Predicted highest price: {}, Predicted lowest price: {}'.format(i + 1, price_Max, price_Min))
 
 
-# Find the latest date in the database (real-time) - Daily
-def find_latest_data_daily(ticker_symbol):
-    end_date = datetime.today().strftime('%Y-%m-%d')
-    while True:
-        # Create a yfinance Ticker object
-        ticker = yf.Ticker(ticker_symbol)
-        # Get historical data for the specific date
-        data = ticker.history(start=end_date, end=end_date)
-        if not data.empty:
-            break
-        end_date = (datetime.strptime(end_date, '%Y-%m-%d') - timedelta(days=1)).strftime('%Y-%m-%d')
-    return end_date
-
-
-# Find the latest data in the database (real-time) - Hourly
-
-
-def find_latest_data_hourly(ticker_symbol):
-    current_date = datetime.now()
-
-    # Set the time component to xx:00:00
-    end_date = current_date.replace(minute=0, second=0, microsecond=0)
-    hourly_data = None
-
-    # Try to retrieve hourly data for the last 7 days until data is found
-    while True:
-        # Create a yfinance Ticker object
-        ticker = yf.Ticker(ticker_symbol)
-
-        # Get historical data for the specific date
-        hourly_data = ticker.history(start=end_date, end=end_date)
-
-        # Check if data is not empty
-        if not hourly_data.empty:
-            break
-
-        # If data is empty, decrement end_date by 1 hour and try again
-        end_date -= timedelta(hours=1)
-
-    return end_date
-
-
-# Determine whether data is available in y finance
-def is_valid_ticker(ticker_symbol):
-    symbol_list = ['AAPL', 'MSFT', 'AMZN', 'GOOGL', 'FB']
-    if ticker_symbol in symbol_list:
-        return True
-    else:
-        return False
-
-
-# Get 10-year daily dataset for stock_data
-def stock_daily_data(ticker_symbol):
-    # Find the latest data in the database (real-time) - Daily
-    end_date = find_latest_data_daily(ticker_symbol)
-    start_date = (datetime.strptime(end_date, '%Y-%m-%d') - timedelta(days=3650)).strftime('%Y-%m-%d')
-    # Get daily data
-    daily_data = yf.download(ticker_symbol, start=start_date, end=end_date)
-    index = daily_data.index
-    # Save DataFrame to CSV file with the index in the first column
-    df = pd.DataFrame(daily_data)
-    return df
-
-
-def stock_hourly_data(ticker_symbol):
-    # Find the latest data in the database (real-time) - Hourly
-    end_date = find_latest_data_hourly(ticker_symbol)
-
-    # The requested range must be within the last 730 days
-    start_date_london = end_date - timedelta(days=700)
-    start_date = start_date_london.astimezone(pytz.utc).strftime('%Y-%m-%d')
-
-    # Get hourly data
-    hourly_data = yf.download(ticker_symbol, start=start_date, end=end_date, interval='1h')
-    # As the index is +4:00, turn to london
-    hourly_data.index = pd.to_datetime(hourly_data.index).tz_convert('Europe/London')
-    df = pd.DataFrame(hourly_data)
-    return df
-
-
-def save_csv(ticker_symbol, df, types):
-    if types == 'daily':
-        csv_file = f"{ticker_symbol}_daily.csv"
-        df.to_csv(csv_file, index_label='Date')
-        print(f"Data saved successfully to {csv_file}")
-    elif types == 'hourly':
-        # Save DataFrame to CSV file with the index in the first column
-        csv_file = f"{ticker_symbol}_hourly.csv"
-        df.to_csv(csv_file)
-        print(f"Data saved successful to {csv_file}")
-
-
-def get_stock_data(ticker_symbol, save, type):
-    # Determine whether ticker symbol is available in dataset:
-    determine = is_valid_ticker(ticker_symbol)
-    if determine is True:
-        df = []
-        if type == 'daily':
-            df = stock_daily_data(ticker_symbol)
-        elif type == 'hourly':
-            df = stock_hourly_data(ticker_symbol)
-        # whether save as csv file
-        # Deal with missing data and outlier by using linear regression
-        df = data_preprocessing(df, ['Open', 'High', 'Low', 'Close', 'Volume'])
-        if save == 'yes':
-            save_csv(ticker_symbol, df, type)
-    else:
-        print("Please retry")
-    return df
-
-
-# EXAMPLE
-if __name__ == "__main__":
-    # get_stock_data('ticker_symbol',save= whether save as csv, type= hourly/daily)
-    # if ticker_symbol is not in list, print try again
-    get_stock_data('AAPL', 'yes', 'hourly')
-    get_stock_data('AAPL', 'yes', 'daily')
