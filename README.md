@@ -54,6 +54,9 @@ Language Recognition for Identifying Keywords:
             The number of prediction times should not be 1, and the prediction time should not be 0.
             Failure to enter prediction type, target column, or available city name for weather API.
             Machine Learning Mode:
+        Default:
+            Not detect prediction time, prediction time set to be 1.
+            For daily temperature prediction, if only temperature enter, prediction both highest and lowest temperature.
 
 Accuracy Limitations:
             For hourly stock prediction, the prediction time should be less than 48.
