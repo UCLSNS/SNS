@@ -57,20 +57,29 @@ Language Recognition for Identifying Keywords:
 
 Accuracy Limitations:
             For hourly stock prediction, the prediction time should be less than 48.
+            
             For daily stock prediction, the prediction time should be less than 5, the number of target columns should be less than 3, and the target columns should not span different groups (e.g., high, low & open, close & volume).
+            
             For weather prediction, the prediction time should be less than 48.
-            System State for Connecting to Server:
-
-Status Codes:
-        Success:
-            200: Login successful.
-            201: Registration successful.
-            202: Stock prediction successful.
-        Error:
-            400: Missing either username or password.
-            401: Wrong username or password.
-            402: Failed to perform stock prediction.
-            403: Failed to perform weather prediction.
-            500: Failed to connect to the server.
+            
+System State for Connecting to Server:
+    Status Codes:
+            Success:
+                200: Login successful.
+            
+                201: Registration successful.
+                
+                202: Stock prediction successful.
+                
+            Error:
+                400: Missing either username or password.
+                
+                401: Wrong username or password.
+                
+                402: Failed to perform stock prediction.
+                
+                403: Failed to perform weather prediction.
+                
+                500: Failed to connect to the server.
+        
     
-
