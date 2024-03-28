@@ -10,10 +10,17 @@ Parameters:
 - sentence (str): The input sentence to analyze.
 
 Defaults: 
-- If the sentence doesn't contain any numbers, the default prediction time is set to 1. 
-- For daily weather 
-detection: if the predicted feature is weather and whether it's maximum or minimum is not specified, both maximum and 
-minimum values are returned.
+- If the sentence doesn't contain any numbers, the default prediction time is set to 1.
+- For daily weather detection, if the predicted feature is weather and whether its maximum or minimum is not specified, both maximum and minimum values are returned.
+The following situation would return an error warning:
+-For prediction time & type: the number should not be bigger than one.
+-For daily prediction of stock:
+To maintain accuracy, the number of target columns should not be bigger than 2.
+Separate high & low, open & close, volume into different groups, if the target columns contain different groups, it will return an error.
+  
+
+
+
 
 Returns:
 For stock predictions:
