@@ -9,6 +9,9 @@ AIM: Detect keywords related to stock and weather predictions in a given sentenc
 3. client_detect.py
 AIM: Utilizing the Tkinter library in Python, this code creates a client application for weather and stock prediction chatbot
 
+4. preprocessing_data.py
+AIM: Data preprocessing for data extracted from API, particularly handling missing values and outliers, using linear regression. It includes functions to detect outliers using Z-score, handle outliers using linear regression, handle missing values using linear regression, and perform overall data preprocessing for specified columns in a pandas frame.
+
 Some limitations for stock prediction:
 1. the number of types (daily/hourly) >1 
 2. no enter prediction time
