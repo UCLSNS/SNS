@@ -25,6 +25,9 @@ weather.py
 This script fetches weather data using the Open-Meteo API for a specified city. It provides functions to retrieve both daily and hourly weather data, preprocess it, and save it to CSV files. Additionally, it includes functions to determine whether weather data is available for a given city and to find the latest date with weather data
 user.db
 user database: contain password and username
+
+weather_lstm.py
+This script provides a quick weather prediction check for a specified city using an LSTM model. It fetches historical weather data, preprocesses it, trains an LSTM model, and predicts future weather conditions. The predictions include maximum temperature, minimum temperature, and rain status for a specified number of days ahead
 Some limitations for stock prediction:
 1. the number of types (daily/hourly) >1 
 2. no enter prediction time
