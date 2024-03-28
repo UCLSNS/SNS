@@ -14,7 +14,7 @@ we use LSTM model and GRU model to do multiple predictions of real-time weather 
 
     keyword_detect.py: Detect keywords related to stock and weather predictions in a given sentence. The keywords are inputs of prediction functions.
 
-    client_detect.py: Utilizing the Tkinter library in Python, this code creates a client application for weather and stock prediction chatbothttps://github.com/UCLSNS/SNS/blob/main/README.md
+    client_detect.py: Utilizing the Tkinter library in Python, this code creates a client application for weather and stock prediction
 
 - Server-side:
     server.py: This Python script implements a Flask web application for handling user authentication, stock prediction, and weather prediction tasks.
