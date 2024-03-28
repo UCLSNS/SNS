@@ -20,7 +20,8 @@ status code:
 400: missing either username or password
 401: wrong username or password
 402: fail to stock prediction
-403: fail to
+403: fail to weather prediction
+500: fail to connect server
 '''
 
 '''Functions related to login part'''
