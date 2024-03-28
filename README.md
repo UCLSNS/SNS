@@ -6,6 +6,26 @@ AIM: Creating GUI elements using the Tkinter library in Python
 2. keyword_detect.py
 AIM: Detect keywords related to stock and weather predictions in a given sentence. The keywords are inputs of prediction functions.
 
+3. client_detect.py
+AIM: Utilizing the Tkinter library in Python, this code creates a client application for weather and stock prediction chatbot
+
+Some limitations for stock prediction:
+1. the number of types (daily/hourly) >1 
+2. no enter prediction time
+3. enter prediction time = 0
+4. hourly: prediction time < 48
+5: daily: prediction time < 5
+6: no find target column
+7. for daily: the number of target columns should <3
+8  for daily: not achieve target column in different groups (high, low & open, close & volume)
+
+Some limitations for weather prediction:
+1. no city enter
+2. city not available in weather API
+3. no prediction time (enter 0 or bigger than 48)
+4. prediction time & type>2
+5. cannot check target columns
+
 Parameters:
 - sentence (str): The input sentence to analyze.
 
@@ -18,9 +38,6 @@ The following situation would return an error warning:
 To maintain accuracy, the number of target columns should not be bigger than 2.
 Separate high & low, open & close, volume into different groups, if the target columns contain different groups, it will return an error.
   
-
-
-
 
 Returns:
 For stock predictions:
