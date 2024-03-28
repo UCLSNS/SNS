@@ -1,7 +1,10 @@
-create_page.py: Creating GUI elements using the Tkinter library in Python
+Brief description of each python file:
 
-keyword_detect.py
-Detect keywords related to stock and weather predictions in a given sentence. The keywords are inputs of prediction functions.
+1. create_page.py:
+AIM: Creating GUI elements using the Tkinter library in Python
+
+2. keyword_detect.py
+AIM: Detect keywords related to stock and weather predictions in a given sentence. The keywords are inputs of prediction functions.
 
 Parameters:
 - sentence (str): The input sentence to analyze.
