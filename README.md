@@ -21,6 +21,8 @@ stock.py
 also provides functionality to preprocess the retrieved data, handle missing values, and outliers using linear 
 regression.'''
 
+weather.py
+This script fetches weather data using the Open-Meteo API for a specified city. It provides functions to retrieve both daily and hourly weather data, preprocess it, and save it to CSV files. Additionally, it includes functions to determine whether weather data is available for a given city and to find the latest date with weather data
 user.db
 user database: contain password and username
 Some limitations for stock prediction:
