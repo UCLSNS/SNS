@@ -7,7 +7,7 @@ Creating GUI elements using the Tkinter library in Python
 Detect keywords related to stock and weather predictions in a given sentence. The keywords are inputs of prediction functions.
 
 3. client_detect.py
-Utilizing the Tkinter library in Python, this code creates a client application for weather and stock prediction chatbot
+Utilizing the Tkinter library in Python, this code creates a client application for weather and stock prediction chatbothttps://github.com/UCLSNS/SNS/blob/main/README.md
 
 5. server.py
 This Python script implements a Flask web application for handling user authentication, stock prediction, 
@@ -21,6 +21,8 @@ stock.py
 also provides functionality to preprocess the retrieved data, handle missing values, and outliers using linear 
 regression.'''
 
+user.db
+user database: contain password and username
 Some limitations for stock prediction:
 1. the number of types (daily/hourly) >1 
 2. no enter prediction time
