@@ -3,7 +3,7 @@ This system utilizes language recognition to identify keywords and performs fore
 
 The system diagram of the chatbot:
 
-![未命名文件](https://github.com/UCLSNS/SNS/assets/160248761/638ff464-4624-40b9-8f7c-782cfa57ccf0)
+![system diagram of chatbot](https://github.com/UCLSNS/SNS/assets/160248761/638ff464-4624-40b9-8f7c-782cfa57ccf0)
 
 
 Brief description of each python file:
@@ -35,61 +35,42 @@ we use LSTM model and GRU model to do multiple predictions of real-time weather 
     
       weather_lstm.py: This script provides a quick weather prediction check for a specified city using an LSTM model. It fetches historical weather data, preprocesses it, trains an LSTM model, and predicts future weather conditions. The predictions include maximum temperature, minimum temperature, and rain status for a specified number of days ahead
 
-Function:
-- Available to predict weather and stock.
-- 
-Some limitations for stock prediction:
-1. the number of types (daily/hourly) >1 
-2. no enter prediction time
-3. enter prediction time = 0
-4. hourly: prediction time < 48
-5: daily: prediction time < 5
-6: no find target column
-7. for daily: the number of target columns should <3
-8  for daily: not achieve target column in different groups (high, low & open, close & volume)
 
-Some limitations for weather prediction:
-1. no city enter
-2. city not available in weather API
-3. no prediction time (enter 0 or bigger than 48)
-4. prediction time & type>2
-5. cannot check target columns
+Language Recognition for Identifying Keywords:
 
-Parameters:
-- sentence (str): The input sentence to analyze.
+    Keyword Detection:
+        For Stock Predictions:
+            target_columns (list): Detected target columns for stock predictions.
+            prediction_time (int): Detected prediction time.
+            prediction_type (str): Detected prediction type (daily or hourly).
+        For Weather Predictions:
+            prediction_city (list): Detected city names for which weather predictions are available.
+            prediction_city_not_available (list): Detected city names for which weather predictions are not available.
+            prediction_time (int): Detected prediction time.
+            prediction_type (str): Detected prediction type (daily or hourly).
+            target_columns (list): Detected target columns for weather predictions.
+        Limitations of Detected Keywords:
+            The number of prediction types (daily/hourly) should be no more than 2.
+            The number of prediction times should not be 1, and the prediction time should not be 0.
+            Failure to enter prediction type, target column, or available city name for weather API.
+            Machine Learning Mode:
 
-Defaults: 
-- If the sentence doesn't contain any numbers, the default prediction time is set to 1.
-- For daily weather detection, if the predicted feature is weather and whether its maximum or minimum is not specified, both maximum and minimum values are returned.
-The following situation would return an error warning:
--For prediction time & type: the number should not be bigger than one.
--For daily prediction of stock:
-To maintain accuracy, the number of target columns should not be bigger than 2.
-Separate high & low, open & close, volume into different groups, if the target columns contain different groups, it will return an error.
-  
-status code: 
-success:
-200: login successful
-201: register successful
-202: stock prediction successful
-error:
-400: missing either username or password
-401: wrong username or password
-402: fail to stock prediction
-403: fail to weather prediction
-500: fail to connect server
+Accuracy Limitations:
+    For hourly stock prediction, the prediction time should be less than 48.
+    For daily stock prediction, the prediction time should be less than 5, the number of target columns should be less than 3, and the target columns should not span different groups (e.g., high, low & open, close & volume).
+    For weather prediction, the prediction time should be less than 48.
+    System State for Connecting to Server:
 
-Returns:
-For stock predictions:
-- target_columns (list): Detected target columns for stock predictions.
-- prediction_time (int): Detected prediction time.
-- prediction_type (str): Detected prediction type (daily or hourly).
+Status Codes:
+    Success:
+    200: Login successful.
+    201: Registration successful.
+    202: Stock prediction successful.
+    Error:
+    400: Missing either username or password.
+    401: Wrong username or password.
+    402: Failed to perform stock prediction.
+    403: Failed to perform weather prediction.
+    500: Failed to connect to the server.
 
-For weather predictions:
-- prediction_city (list): Detected city names for which weather predictions are available.
-- prediction_city_not_available (list): Detected city names for which weather predictions are not available.
-- prediction_time (int): Detected prediction time.
-- prediction_type (str): Detected prediction type (daily or hourly).
-- target_columns (list): Detected target columns for weather predictions.
-"""
 
