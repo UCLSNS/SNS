@@ -1,37 +1,43 @@
+Introduction：
+This system utilizes language recognition to identify keywords and performs forecasts for both stocks and weather by extracting datasets from the yfinance library and Open-Meteo API.For stocks, it can predict various features such as high, low, open, close, and volume for up to 50 stocks over multiple days. In terms of weather forecasting, the system can provide predictions for various weather conditions such as temperature, pressure, wind speed, etc., for multiple cities over multiple days. Additionally, the system offers a quick overview feature to predict the maximum temperature, minimum temperature, and rainfall conditions for multiple cities over multiple days.
+
 The system diagram of the chatbot:
 
 ![未命名文件](https://github.com/UCLSNS/SNS/assets/160248761/638ff464-4624-40b9-8f7c-782cfa57ccf0)
 
+
 Brief description of each python file:
+we use LSTM model and GRU model to do multiple predictions of real-time weather of cities all round the world and 50 types of stock price. The whole system is modular design in Python and all the input and output interaction is implemented through the client.
 
-1. create_page.py:
-Creating GUI elements using the Tkinter library in Python
+- Client-side
+    create_page.py: Creating GUI elements using the Tkinter library in Python
 
-2. keyword_detect.py
-Detect keywords related to stock and weather predictions in a given sentence. The keywords are inputs of prediction functions.
+    keyword_detect.py: Detect keywords related to stock and weather predictions in a given sentence. The keywords are inputs of prediction functions.
 
-3. client_detect.py
-Utilizing the Tkinter library in Python, this code creates a client application for weather and stock prediction chatbothttps://github.com/UCLSNS/SNS/blob/main/README.md
+    client_detect.py: Utilizing the Tkinter library in Python, this code creates a client application for weather and stock prediction chatbothttps://github.com/UCLSNS/SNS/blob/main/README.md
 
-5. server.py
-This Python script implements a Flask web application for handling user authentication, stock prediction, 
-and weather prediction tasks.
+- Server-side:
+    server.py: This Python script implements a Flask web application for handling user authentication, stock prediction, and weather prediction tasks.
 
-4. preprocessing_data.py
-Data preprocessing for data extracted from API, particularly handling missing values and outliers, using linear regression. It includes functions to detect outliers using Z-score, handle outliers using linear regression, handle missing values using linear regression, and perform overall data preprocessing for specified columns in a pandas frame.
+    user.db: User database to store password and username
 
-stock.py
-'''This Python script is designed to fetch historical stock data from Yahoo Finance using the yfinance library. It 
-also provides functionality to preprocess the retrieved data, handle missing values, and outliers using linear 
-regression.'''
+    - Dataset fetching:
+      stock.py: This Python script is designed to fetch historical stock data from Yahoo Finance using the yfinance library. It also provides functionality to preprocess the retrieved data, a handle missing values, and outliers usi  linear regression.
 
-weather.py
-This script fetches weather data using the Open-Meteo API for a specified city. It provides functions to retrieve both daily and hourly weather data, preprocess it, and save it to CSV files. Additionally, it includes functions to determine whether weather data is available for a given city and to find the latest date with weather data
-user.db
-user database: contain password and username
+      weather.py: This script fetches weather data using the Open-Meteo API for a specified city. It provides functions to retrieve both daily and hourly weather data, preprocess it, and save it to CSV files. Additionally, it includes functions to determine whether weather data is available for a given city and to find the latest date with weather data
+    
+      preprocessing_data.py: Data preprocessing for data extracted from API, particularly handling missing values and outliers, using linear regression. It includes functions to detect outliers using Z-score, handle outliers using linear regression, handle missing values using linear regression, and perform overall data preprocessing for specified columns in a pandas frame.
 
-weather_lstm.py
-This script provides a quick weather prediction check for a specified city using an LSTM model. It fetches historical weather data, preprocesses it, trains an LSTM model, and predicts future weather conditions. The predictions include maximum temperature, minimum temperature, and rain status for a specified number of days ahead
+    - Neural machine learning model:
+      stock_prediction.py: This Python script is dedicated to building, training, and evaluating deep learning models for stock prediction using historical weather date.
+
+      weather_prediction.py: This Python script is dedicated to building, training, and evaluating deep learning models for weather prediction using historical weather date
+    
+      weather_lstm.py: This script provides a quick weather prediction check for a specified city using an LSTM model. It fetches historical weather data, preprocesses it, trains an LSTM model, and predicts future weather conditions. The predictions include maximum temperature, minimum temperature, and rain status for a specified number of days ahead
+
+Function:
+- Available to predict weather and stock.
+- 
 Some limitations for stock prediction:
 1. the number of types (daily/hourly) >1 
 2. no enter prediction time
