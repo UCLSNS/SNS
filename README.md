@@ -64,6 +64,7 @@ Accuracy Limitations:
             
 System State for Connecting to Server:
     Status Codes:
+    
             Success:
                 200: Login successful.
             
