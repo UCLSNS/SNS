@@ -1,16 +1,20 @@
 Brief description of each python file:
 
 1. create_page.py:
-AIM: Creating GUI elements using the Tkinter library in Python
+Creating GUI elements using the Tkinter library in Python
 
 2. keyword_detect.py
-AIM: Detect keywords related to stock and weather predictions in a given sentence. The keywords are inputs of prediction functions.
+Detect keywords related to stock and weather predictions in a given sentence. The keywords are inputs of prediction functions.
 
 3. client_detect.py
-AIM: Utilizing the Tkinter library in Python, this code creates a client application for weather and stock prediction chatbot
+Utilizing the Tkinter library in Python, this code creates a client application for weather and stock prediction chatbot
+
+5. server.py
+This Python script implements a Flask web application for handling user authentication, stock prediction, 
+and weather prediction tasks.
 
 4. preprocessing_data.py
-AIM: Data preprocessing for data extracted from API, particularly handling missing values and outliers, using linear regression. It includes functions to detect outliers using Z-score, handle outliers using linear regression, handle missing values using linear regression, and perform overall data preprocessing for specified columns in a pandas frame.
+Data preprocessing for data extracted from API, particularly handling missing values and outliers, using linear regression. It includes functions to detect outliers using Z-score, handle outliers using linear regression, handle missing values using linear regression, and perform overall data preprocessing for specified columns in a pandas frame.
 
 Some limitations for stock prediction:
 1. the number of types (daily/hourly) >1 
@@ -41,6 +45,17 @@ The following situation would return an error warning:
 To maintain accuracy, the number of target columns should not be bigger than 2.
 Separate high & low, open & close, volume into different groups, if the target columns contain different groups, it will return an error.
   
+status code: 
+success:
+200: login successful
+201: register successful
+202: stock prediction successful
+error:
+400: missing either username or password
+401: wrong username or password
+402: fail to stock prediction
+403: fail to weather prediction
+500: fail to connect server
 
 Returns:
 For stock predictions:
