@@ -1,3 +1,7 @@
+The system diagram of the chatbot:
+
+![未命名文件](https://github.com/UCLSNS/SNS/assets/160248761/638ff464-4624-40b9-8f7c-782cfa57ccf0)
+
 Brief description of each python file:
 
 1. create_page.py:
