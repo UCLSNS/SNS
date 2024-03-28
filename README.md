@@ -16,6 +16,11 @@ and weather prediction tasks.
 4. preprocessing_data.py
 Data preprocessing for data extracted from API, particularly handling missing values and outliers, using linear regression. It includes functions to detect outliers using Z-score, handle outliers using linear regression, handle missing values using linear regression, and perform overall data preprocessing for specified columns in a pandas frame.
 
+stock.py
+'''This Python script is designed to fetch historical stock data from Yahoo Finance using the yfinance library. It 
+also provides functionality to preprocess the retrieved data, handle missing values, and outliers using linear 
+regression.'''
+
 Some limitations for stock prediction:
 1. the number of types (daily/hourly) >1 
 2. no enter prediction time
