@@ -182,5 +182,5 @@ def model_accuracy(model, x_val, y_val, x_test, y_test):
 
 # Example usage
 if __name__ == '__main__':
-    weather_prediction('london', ['RAIN', 'TEMPERATURE_max', 'TEMPERATURE_min', 'WIND_SPEED_max', 'evapotranspiration'],
+    weather_prediction('london', ['TEMPERATURE_max', 'TEMPERATURE_min', 'WIND_SPEED_max', 'evapotranspiration'],
                        'daily', 48, 'yes', 'GRU')

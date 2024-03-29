@@ -12,11 +12,13 @@ and weather prediction tasks.'''
 
 app = Flask(__name__)
 
-''': 
+'''
 status code: 
+success:
 200: login successful
 201: register successful
 202: stock prediction successful
+error:
 400: missing either username or password
 401: wrong username or password
 402: fail to stock prediction

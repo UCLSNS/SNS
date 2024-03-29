@@ -179,5 +179,8 @@ def model_accuracy(model, x_val, y_val, x_test, y_test):
 
 # Example usage
 if __name__ == '__main__':
-    stock_prediction('AAPL', ['Open', 'Close'], 'daily', 5, 'yes', 'GRU')
+    stock_prediction('AAPL', ['Open'], 'daily', 5, 'yes', 'LSTM')
     # stock_prediction('AAPL', ['High', 'Low','Volume','Close','Open'], 'hourly', 48, 'yes', 'GRU')
+    stock_prediction('AAPL', ['Open'], 'hourly', 5, 'yes', 'LSTM')
+    stock_prediction('AAPL', ['Open', 'High'], 'hourly', 5, 'yes', 'GRU')
+    stock_prediction('AAPL', ['Open','Close'], 'hourly', 5, 'yes', 'LSTM')
